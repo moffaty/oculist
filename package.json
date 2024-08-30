@@ -1,0 +1,29 @@
+{
+    "name": "oculist",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "client-server application to calculate location from landmarks ",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo hola"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/moffaty/oculist.git"
+    },
+    "keywords": [
+        "location"
+    ],
+    "author": "Moffaty",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/moffaty/oculist/issues"
+    },
+    "homepage": "https://github.com/moffaty/oculist#readme",
+    "dependencies": {
+        "express": "^4.19.2",
+        "prettier": "^3.3.3",
+        "sequelize": "^6.37.3",
+        "sqlite3": "^5.1.7"
+    }
+}
