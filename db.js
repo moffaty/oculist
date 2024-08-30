@@ -1,9 +1,9 @@
-import { Sequelize, DataTypes } from 'sequelize'
+import { Sequelize, DataTypes } from 'sequelize';
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: 'marks.sqlite',
-})
+});
 
 const User = sequelize.define(
     'Mark',
@@ -26,7 +26,7 @@ const User = sequelize.define(
     {
         // Other model options go here
     }
-)
+);
 
 // `sequelize.define` also returns the model
-sequelize.sync({ force: true }) // create table
+sequelize.sync({ force: true }); // create table

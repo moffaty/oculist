@@ -1,1 +1,1 @@
-const asd = `123`
+const asd = `123`;
