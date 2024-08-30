@@ -10,7 +10,7 @@ const logger = new Logger();
 const app = express();
 
 app.use(express.json());
-app.use(session(sessionOpts))
+app.use(session(sessionOpts));
 
 setupRoutes(app);
 

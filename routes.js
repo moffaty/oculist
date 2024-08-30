@@ -1,5 +1,5 @@
 export function setupRoutes(app) {
     app.get('/', (req, res) => {
-        res.json('hola')
-    })
+        res.json('hola');
+    });
 }
