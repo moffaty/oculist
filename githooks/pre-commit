@@ -2,4 +2,8 @@
 #
 echo "Running Prettier..."
 npx prettier --write . || { echo "Prettier failed"; exit 1; }
-echo "Prettier formatting complete."
+
+echo "Adding changes to git..."
+git add . || { echo "Failed to add changes"; exit 1; }
+
+echo "Prettier formatting and staging complete."
