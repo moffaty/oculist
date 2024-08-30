@@ -1,3 +1,5 @@
 #!/bin/sh
 #
-npx prettier --write ../
+echo "Running Prettier..."
+npx prettier --write . || { echo "Prettier failed"; exit 1; }
+echo "Prettier formatting complete."
