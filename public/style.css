@@ -1,0 +1,23 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#map {
+    height: 100vh; /* Карта на весь экран */
+    width: 100%;
+}
+
+.add-button {
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    z-index: 1000; /* Убедимся, что кнопка всегда поверх карты */
+    font-size: 18px;
+    padding: 10px 20px;
+}
+
+.modal-dialog {
+    max-width: 500px;
+}

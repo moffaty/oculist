@@ -1,3 +1,7 @@
+import Logger from 'logger-files';
+
+export const logger = new Logger();
+
 export const sessionOpts = {
     secret: '123',
     resave: false,

@@ -5,23 +5,26 @@ const sequelize = new Sequelize({
     storage: 'marks.sqlite',
 });
 
-const User = sequelize.define(
-    'Mark',
+export const Bearing = sequelize.define(
+    'Bearing',
     {
         Name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
         // Model attributes are defined here
-        x: {
+        latitude: {
             type: DataTypes.NUMBER,
             allowNull: false,
         },
-        y: {
+        longitude: {
             type: DataTypes.NUMBER,
             allowNull: false,
-            // allowNull defaults to true
         },
+        bearing: {
+            type: DataTypes.NUMBER,
+            allowNull: false
+        }
     },
     {
         // Other model options go here
@@ -29,4 +32,4 @@ const User = sequelize.define(
 );
 
 // `sequelize.define` also returns the model
-sequelize.sync({ force: true }); // create table
+// sequelize.sync({ force: true }); // create table
