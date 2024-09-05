@@ -2,22 +2,22 @@
 const map = L.map('map').setView([60.16952, 24.93545], 6); // Центр карты на Хельсинки
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+    attribution: '© OpenStreetMap contributors',
 }).addTo(map);
 
 let bearingMarkers = [];
 let shipMarker = null;
 
-let socket = new WebSocket("ws://localhost:9999");
+let socket = new WebSocket('ws://localhost:9999');
 
 socket.onopen = (e) => {
     console.log('opened');
-}
+};
 
 socket.onmessage = (e) => {
     const position = JSON.parse(e.data);
     updateShipPosition(position);
-}
+};
 
 // Функция для загрузки пеленгов с сервера
 async function getBearings() {
@@ -26,14 +26,15 @@ async function getBearings() {
         const result = await response.json();
         console.log(result);
         if (result && result.length > 0) {
-            result.forEach(mark => {
-                const marker = L.marker([mark.latitude, mark.longitude]).addTo(map)
-                .bindPopup(`Пеленг: ${mark.bearing}°`).openPopup();
-            
-                bearingMarkers.push(marker);
-            })
-        }
+            result.forEach((mark) => {
+                const marker = L.marker([mark.latitude, mark.longitude])
+                    .addTo(map)
+                    .bindPopup(`Пеленг: ${mark.bearing}°`)
+                    .openPopup();
 
+                bearingMarkers.push(marker);
+            });
+        }
     } catch (error) {
         console.error('Error adding bearing:', error);
     }
@@ -66,46 +67,55 @@ function updateShipPosition(position) {
     }
 
     // Обновляем маркер позиции корабля
-    shipMarker = L.marker([latitude, longitude], { color: 'red' }).addTo(map)
-        .bindPopup('Текущее местоположение корабля').openPopup();
+    shipMarker = L.marker([latitude, longitude], { color: 'red' })
+        .addTo(map)
+        .bindPopup('Текущее местоположение корабля')
+        .openPopup();
 
     // map.setView([latitude, longitude]);
 }
 
 // Обработчик отправки формы
-document.getElementById('bearing-form').addEventListener('submit', function (event) {
-    event.preventDefault();
+document
+    .getElementById('bearing-form')
+    .addEventListener('submit', function (event) {
+        event.preventDefault();
 
-    const name = document.getElementById('name').value;
-    const latitude = parseFloat(document.getElementById('latitude').value);
-    const longitude = parseFloat(document.getElementById('longitude').value);
-    const bearing = parseFloat(document.getElementById('bearing').value);
-    const destination = parseFloat(document.getElementById('destination').value);
+        const name = document.getElementById('name').value;
+        const latitude = parseFloat(document.getElementById('latitude').value);
+        const longitude = parseFloat(
+            document.getElementById('longitude').value
+        );
+        const bearing = parseFloat(document.getElementById('bearing').value);
+        const destination = parseFloat(
+            document.getElementById('destination').value
+        );
 
-    // Данные для отправки
-    const bearingData = {
-        name,
-        latitude,
-        longitude,
-        bearing,
-        destination
-    };
+        // Данные для отправки
+        const bearingData = {
+            name,
+            latitude,
+            longitude,
+            bearing,
+            destination,
+        };
 
-    // Добавляем пеленг на сервер
-    addBearing(bearingData);
+        // Добавляем пеленг на сервер
+        addBearing(bearingData);
 
-    // Добавляем маркер пеленга на карту
-    const marker = L.marker([latitude, longitude]).addTo(map)
-        .bindPopup(`Пеленг: ${bearing}°`).openPopup();
-    
-    bearingMarkers.push(marker);
+        // Добавляем маркер пеленга на карту
+        const marker = L.marker([latitude, longitude])
+            .addTo(map)
+            .bindPopup(`Пеленг: ${bearing}°`)
+            .openPopup();
 
-    // Закрываем модальное окно после отправки формы
-    $('#addBearingModal').modal('hide');
+        bearingMarkers.push(marker);
 
-    // Очищаем форму
-    event.target.reset();
-});
+        // Закрываем модальное окно после отправки формы
+        $('#addBearingModal').modal('hide');
 
+        // Очищаем форму
+        event.target.reset();
+    });
 
 getBearings();

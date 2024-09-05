@@ -13,7 +13,7 @@ export class ShipPositionCalculator {
         this.positions.push({
             coords: { latitude: lat, longitude: lon },
             bearing: bearing,
-            timestamp: Date.now() - timestamp
+            timestamp: Date.now() - timestamp,
         });
     }
 
@@ -27,7 +27,9 @@ export class ShipPositionCalculator {
     // Рассчет новой позиции с учётом времени между замерами
     calculatePosition() {
         if (this.positions.length < 2) {
-            throw new Error("Нужно как минимум два пеленга для определения местоположения.");
+            throw new Error(
+                'Нужно как минимум два пеленга для определения местоположения.'
+            );
         }
 
         // Сортируем пеленги по времени замера
@@ -39,13 +41,18 @@ export class ShipPositionCalculator {
 
         for (let i = 1; i < this.positions.length; i++) {
             const nextPosition = this.positions[i];
-            const timeDiffSeconds = (nextPosition.timestamp - currentTime) / 1000; // Разница во времени в секундах
+            const timeDiffSeconds =
+                (nextPosition.timestamp - currentTime) / 1000; // Разница во времени в секундах
 
             // Расстояние, пройденное кораблём за это время
             const distanceTraveled = this.speed * timeDiffSeconds;
 
             // Рассчитываем новую позицию с учётом bearing (курса)
-            currentPosition = computeDestinationPoint(currentPosition, distanceTraveled, this.course);
+            currentPosition = computeDestinationPoint(
+                currentPosition,
+                distanceTraveled,
+                this.course
+            );
 
             // Обновляем текущее время на время следующего замера
             currentTime = nextPosition.timestamp;

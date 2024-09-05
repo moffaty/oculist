@@ -16,20 +16,21 @@ export function setupRoutes(app) {
             res.json(ships);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'An error occurred while fetching data' });
+            res.status(500).json({
+                error: 'An error occurred while fetching data',
+            });
         }
     });
-    
 
     // Добавить новую пеленгу
     app.post('/add-bearing', async (req, res) => {
         const { name, latitude, longitude, bearing } = req.body;
-    
+
         // Проверяем, что все параметры переданы
         if (!latitude || !longitude || !bearing) {
             return res.status(400).json({ error: 'Недостаточно параметров' });
         }
-    
+
         try {
             // Добавляем новую запись в таблицу Ship
             const newBearing = await Bearing.create({
@@ -38,14 +39,13 @@ export function setupRoutes(app) {
                 longitude,
                 bearing,
             });
-    
+
             res.json({ message: 'Пеленг добавлен', bearing: newBearing });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Ошибка при добавлении пеленга' });
         }
     });
-    
 
     // Получить текущую позицию корабля
     app.get('/position', (req, res) => {

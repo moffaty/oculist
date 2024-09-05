@@ -1,67 +1,124 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Окулист</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="icon" type="image/png" href="ship.png" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/style.css" />
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Окулист</title>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet/dist/leaflet.css"
+        />
+        <link rel="icon" type="image/png" href="ship.png" />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <!-- Карта -->
+        <div id="map"></div>
 
-<!-- Карта -->
-<div id="map"></div>
-
-<!-- Кнопка для открытия модального окна -->
-<button type="button" class="btn btn-primary add-button" data-toggle="modal" data-target="#addBearingModal">
-  Добавить пеленг
-</button>
-
-<!-- Модальное окно для добавления пеленга -->
-<div class="modal fade" id="addBearingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Добавить пеленг</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+        <!-- Кнопка для открытия модального окна -->
+        <button
+            type="button"
+            class="btn btn-primary add-button"
+            data-toggle="modal"
+            data-target="#addBearingModal"
+        >
+            Добавить пеленг
         </button>
-      </div>
-      <div class="modal-body">
-        <form id="bearing-form">
-            <div class="form-group">
-                <label for="latitude">Название:</label>
-                <input type="text" class="form-control" id="name" name="name" step="any">
+
+        <!-- Модальное окно для добавления пеленга -->
+        <div
+            class="modal fade"
+            id="addBearingModal"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Добавить пеленг
+                        </h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="bearing-form">
+                            <div class="form-group">
+                                <label for="latitude">Название:</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    name="name"
+                                    step="any"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="latitude">Широта:</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="latitude"
+                                    name="latitude"
+                                    step="any"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="longitude">Долгота:</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="longitude"
+                                    name="longitude"
+                                    step="any"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="bearing">Пеленг (градусы):</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="bearing"
+                                    name="bearing"
+                                    required
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="bearing">Расстояние (км):</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    id="destination"
+                                    name="destination"
+                                    required
+                                />
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Добавить пеленг
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
-          <div class="form-group">
-            <label for="latitude">Широта:</label>
-            <input type="number" class="form-control" id="latitude" name="latitude" step="any" required>
-          </div>
-          <div class="form-group">
-            <label for="longitude">Долгота:</label>
-            <input type="number" class="form-control" id="longitude" name="longitude" step="any" required>
-          </div>
-          <div class="form-group">
-            <label for="bearing">Пеленг (градусы):</label>
-            <input type="number" class="form-control" id="bearing" name="bearing" required>
-          </div>
-          <div class="form-group">
-            <label for="bearing">Расстояние (км):</label>
-            <input type="number" class="form-control" id="destination" name="destination" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Добавить пеленг</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="/script.js"></script>
-
-</body>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="/script.js"></script>
+    </body>
 </html>

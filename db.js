@@ -23,8 +23,8 @@ export const Bearing = sequelize.define(
         },
         bearing: {
             type: DataTypes.NUMBER,
-            allowNull: false
-        }
+            allowNull: false,
+        },
     },
     {
         // Other model options go here
