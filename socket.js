@@ -1,5 +1,6 @@
 import { WebSocketServer } from 'ws';
 import { logger } from './config.js';
+import { calculateDestination } from './destination.js';
 export function setupWebSocket() {
     const ws = new WebSocketServer({port: 9999});
     logger.custom('ws.csv', 'ws');
