@@ -6,7 +6,7 @@ def run_main(video="test.mp4", output="output.mp4"):
     # '0' для веб-камеры
     # rtsp://username:password@ip_address:port/stream
     cap = cv2.VideoCapture(video)  # Используйте  или замените на имя файла для видеофайла
-
+    # rtsp://admin:aa123456@192.168.1.68:554/stream
     # Инициализация объекта VideoWriter для записи видео
     out = cv2.VideoWriter(output, cv2.VideoWriter_fourcc(*'mp4v'), 30, (int(cap.get(3)), int(cap.get(4))))
 
@@ -95,4 +95,4 @@ if __name__ == "__main__":
     lk_params = dict(winSize=(15, 15),
                      maxLevel=2,
                      criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
-    run_main()
+    run_main('rtsp://admin:aa123456@192.168.1.68:554/')
