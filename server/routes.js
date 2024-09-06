@@ -1,6 +1,6 @@
-import { ShipPositionCalculator } from './ship.js'; // поправил имя файла
+import { ShipPositionCalculator } from '../navigation/ship.js'; // поправил имя файла
 import { join } from 'path';
-import { Bearing } from './db.js';
+import { Bearing } from '../db.js';
 const ship = new ShipPositionCalculator();
 
 // Маршруты

@@ -4,7 +4,8 @@ const map = L.map('map').setView([60.16952, 24.93545], 6); // Центр кар�
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
 }).addTo(map);
-
+document.getElementsByClassName('leaflet-control-attribution')[0].textContent =
+    'Окулист';
 let bearingMarkers = [];
 let shipMarker = null;
 

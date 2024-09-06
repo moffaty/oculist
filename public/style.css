@@ -10,10 +10,13 @@ body {
     width: 100%;
 }
 
+.controls {
+    left: 5%;
+}
+
 .add-button {
     position: absolute;
-    top: 20px;
-    left: 10%;
+    top: 1%;
     z-index: 1000; /* Убедимся, что кнопка всегда поверх карты */
     font-size: 18px;
     padding: 10px 20px;
@@ -21,8 +24,7 @@ body {
 
 .camera-button {
     position: absolute;
-    top: 20px;
-    left: 20%;
+    top: 7%;
     z-index: 1000;
     font-size: 18px;
     padding: 10px 20px;

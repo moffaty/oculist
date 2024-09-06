@@ -30,6 +30,6 @@ export const Bearing = sequelize.define(
         // Other model options go here
     }
 );
-
+// need to create test pack
 // `sequelize.define` also returns the model
 // sequelize.sync({ force: true }); // create table

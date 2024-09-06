@@ -1,12 +1,12 @@
 import express from 'express';
 import http from 'http';
 import { join } from 'path';
-import { setupRoutes } from './routes.js';
+import { setupRoutes } from './server/routes.js';
 import session from 'express-session';
-import { setupWebSocket } from './socket.js';
-import { PORT, sessionOpts } from './config.js';
+import { setupWebSocket } from './server/socket.js';
+import { PORT, sessionOpts } from './server/config.js';
 import { dirname } from 'path';
-import { logger } from './config.js';
+import { logger } from './server/config.js';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
