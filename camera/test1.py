@@ -10,12 +10,11 @@ def connect_onvif_camera(camera_ip, username, password):
     return ptz, profiles[0]
 
 # Перемещение камеры на указанные координаты PTZ
-def move_camera_to_position(ptz, profile_token, pan, tilt, zoom=0.5):
+def move_camera_to_position(ptz, profile_token, pan, tilt, zoom=1):
     request = ptz.create_type('AbsoluteMove')
     request.ProfileToken = profile_token
     request.Position = {
         'PanTilt': {'x': pan, 'y': tilt},
-        'Zoom': {'x': zoom}
     }
     ptz.AbsoluteMove(request)
 
@@ -50,7 +49,8 @@ def main():
     ptz, profile = connect_onvif_camera(camera_ip, username, password)
 
     # Открытие видеопотока
-    cap = cv2.VideoCapture(f"http://{camera_ip}/video_feed")
+    # rtsp://admin:password@192.168.1.68:554/
+    cap = cv2.VideoCapture(f"rtsp://{username}:{password}@{camera_ip}/")
     if not cap.isOpened():
         print("Ошибка открытия видеопотока")
         return
