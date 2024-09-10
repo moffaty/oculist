@@ -9,6 +9,7 @@ export function setupWebSocket() {
             // начальные координаты
             const startPostion = { latitude: 59.99596, longitude: 30 };
             ws.send(JSON.stringify({ latitude: 59.99596, longitude: 30 }));
+            // нужно отправить вычесленную позицию
         }, 1000);
     });
 }
