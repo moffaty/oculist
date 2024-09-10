@@ -51,6 +51,13 @@ async function createDatabase() {
     return await runCommand('node db.js --create', 'Создание базы данных');
 }
 
+async function updateGitHooks() {
+    return await runCommand(
+        'git config core.hooksPath ./githooks',
+        'Обновление пути к гит-хукам'
+    );
+}
+
 function startServer() {
     return runInBackground('node server', 'Запуск в режиме разработки');
 }
@@ -64,6 +71,8 @@ async function runAllCommands() {
         await installNodeDependencies();
         // Создание базы данных
         await createDatabase();
+
+        await updateGitHooks();
 
         startServer();
 
