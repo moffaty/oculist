@@ -6,7 +6,8 @@
     "main": "index.js",
     "scripts": {
         "test": "echo hola",
-        "dev": "npx nodemon server"
+        "dev": "npx nodemon server",
+        "full-install": "node install.js"
     },
     "repository": {
         "type": "git",
