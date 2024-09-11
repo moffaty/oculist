@@ -11,21 +11,20 @@ body {
 }
 
 .controls {
-    left: 5%;
+    position: absolute;
+    z-index: 1000; /* Убедимся, что кнопка всегда поверх карты */
 }
 
 .add-button {
-    position: absolute;
     top: 1%;
-    z-index: 1000; /* Убедимся, что кнопка всегда поверх карты */
+    left: 5%; /* Выставляем кнопки слева */
     font-size: 18px;
     padding: 10px 20px;
 }
 
 .devices-button {
-    position: absolute;
     top: 7%;
-    z-index: 1000;
+    left: 5%; /* Выставляем кнопки слева */
     font-size: 18px;
     padding: 10px 20px;
 }
