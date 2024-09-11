@@ -83,5 +83,5 @@ export function setupRoutes(app) {
                 res.json({ test: 'lol' });
             }
         }
-    })
+    });
 }
