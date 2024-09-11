@@ -22,7 +22,7 @@ body {
     padding: 10px 20px;
 }
 
-.camera-button {
+.devices-button {
     position: absolute;
     top: 7%;
     z-index: 1000;

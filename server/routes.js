@@ -74,4 +74,14 @@ export function setupRoutes(app) {
             res.status(500).json({ error: error.message });
         }
     });
+
+    app.get('/devices/:type', (req, res) => {
+        const type = req.params.type;
+        console.log(type);
+        switch (type) {
+            case 'info': {
+                res.json({ test: 'lol' });
+            }
+        }
+    })
 }

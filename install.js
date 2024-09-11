@@ -1,5 +1,5 @@
 import { exec, spawn } from 'child_process';
-
+import { platform } from 'os';
 // Функция для выполнения shell-команд
 function runCommand(command, description) {
     return new Promise((resolve, reject) => {
@@ -37,8 +37,12 @@ function runInBackground(command, description) {
 }
 
 async function installPythonDependencies() {
+    let pip = 'pip';
+    if (platform() === 'linux') {
+        pip = 'pip3';
+    }
     return await runCommand(
-        'pip install -r ./camera/requirements.txt --user',
+        pip + ' install -r ./camera/requirements.txt --user',
         'Установка Python зависимостей'
     );
 }

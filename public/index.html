@@ -19,13 +19,14 @@
         <!-- Карта -->
         <div id="map"></div>
 
-        <a
-            href="./camera.html"
+        <button
             type="button"
-            class="btn btn-info controls camera-button"
+            class="btn btn-info controls devices-button"
+            data-toggle="modal"
+            data-target="#devices"
         >
-            Камеры
-        </a>
+            Устройства
+        </button>
 
         <!-- Кнопка для открытия модального окна -->
         <button
@@ -36,6 +37,27 @@
         >
             Добавить пеленг
         </button>
+
+        <div
+            class="modal fade"
+            id="devices"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+        >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Список устройств
+                </div>
+                <div class="modal-body">
+                <div>
+                    Устройства не найдены
+                </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Модальное окно для добавления пеленга -->
         <div
@@ -107,6 +129,7 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="/devices.js"></script>
         <script src="/script.js"></script>
     </body>
 </html>
