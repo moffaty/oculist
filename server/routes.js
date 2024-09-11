@@ -1,7 +1,8 @@
-import { ShipPositionCalculator } from '../navigation/ship.js'; // поправил имя файла
 import { join } from 'path';
 import { Bearing } from '../db.js';
-const ship = new ShipPositionCalculator();
+import { Navigator } from '../navigation/navigator.js';
+
+let navigator;
 
 // Маршруты
 export function setupRoutes(app) {
@@ -68,8 +69,8 @@ export function setupRoutes(app) {
     // Получить текущую позицию корабля
     app.get('/position', (req, res) => {
         try {
-            const position = ship.calculatePosition();
-            res.json(position);
+            // const position = ship.calculatePosition();
+            res.json(0);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
@@ -82,6 +83,24 @@ export function setupRoutes(app) {
             case 'info': {
                 res.json({ test: 'lol' });
             }
+        }
+    });
+
+    app.get('/ride/start', async (req, res) => {
+        try {
+            navigator = new Navigator('test');
+            res.json({ res: true, msg: 'Следование начато' });
+        } catch (error) {
+            res.json({ res: false, msg: 'Не удалось начать следование' });
+        }
+    });
+
+    app.get('/ride/end', async (req, res) => {
+        try {
+            await navigator.endRide();
+            res.json({ res: true, msg: 'Следование закончено' });
+        } catch (error) {
+            res.json({ res: false, msg: 'Не удалось закончить следование' });
         }
     });
 }

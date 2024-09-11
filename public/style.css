@@ -29,6 +29,22 @@ body {
     padding: 10px 20px;
 }
 
+.ride-button {
+    top: 13%;
+    left: 5%; /* Выставляем кнопки слева */
+    font-size: 18px;
+    padding: 10px 20px;
+}
+
 .modal-dialog {
     max-width: 500px;
+}
+
+.alert {
+    z-index: 1000;
+    font-size: large;
+    font-weight: 500;
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
 }

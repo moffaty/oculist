@@ -43,11 +43,9 @@ async function runAllCommands() {
 
         await updateGitHooks();
 
-        startServer();
+        // startServer();
 
-        console.log(
-            '\nВсе команды успешно выполнены!\nСервер: http://localhost:7777/'
-        );
+        console.log('\nВсе команды успешно выполнены!');
     } catch (error) {
         console.error('\nПроизошла ошибка во время выполнения команд:', error);
     }
