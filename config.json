@@ -1,0 +1,16 @@
+{
+    "cameras": [
+        {
+            "name": "1001",
+            "address": "192.168.1.68",
+            "login": "admin",
+            "password": "aa123456"
+        },
+        {
+            "name": "1002",
+            "address": "192.168.1.69",
+            "login": "admin",
+            "password": "aa123456"
+        }
+    ]
+}
