@@ -21,15 +21,14 @@ export const Bearing = sequelize.define(
             type: DataTypes.NUMBER,
             allowNull: false,
         },
-        bearing: {
-            type: DataTypes.NUMBER,
-            allowNull: false,
-        },
     },
     {
         // Other model options go here
     }
 );
+
+if (process.argv[2] === '--create') {
+    sequelize.sync({ force: true }); // create table
+}
 // need to create test pack
 // `sequelize.define` also returns the model
-// sequelize.sync({ force: true }); // create table
