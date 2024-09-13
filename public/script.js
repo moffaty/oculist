@@ -54,6 +54,7 @@ socket.onopen = (e) => {
 
 socket.onmessage = (e) => {
     const position = JSON.parse(e.data);
+    console.log(position);
     // updateShipPosition(position);
 };
 
