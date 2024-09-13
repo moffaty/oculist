@@ -1,5 +1,5 @@
 node_modules
-marks.sqlite
+*.sqlite
 logs
 output.png
 output.jpg
