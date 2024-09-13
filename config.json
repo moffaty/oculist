@@ -12,5 +12,29 @@
             "login": "admin",
             "password": "aa123456"
         }
+    ],
+    "rfinders": [
+        {
+            "name": "1001",
+            "port": "COM3",
+            "options": {
+                "baudRate": 115200,
+                "dataBits": 8,
+                "stopBits": 1,
+                "parity": "none",
+                "autoOpen": false
+            }
+        },
+        {
+            "name": "1002",
+            "port": "COM4",
+            "options": {
+                "baudRate": 115200,
+                "dataBits": 8,
+                "stopBits": 1,
+                "parity": "none",
+                "autoOpen": false
+            }
+        }
     ]
 }

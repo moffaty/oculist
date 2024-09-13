@@ -1,20 +1,23 @@
 import { exec, spawn } from 'child_process';
 
 // Функция для выполнения shell-команд
-export function runCommand(command, description, res = 'Результат:') {
+export function runCommand(
+    command,
+    description,
+    res = 'Результат:',
+    err = `Ошибка при выполнении команды: ${command}`,
+    log = console.log
+) {
     return new Promise((resolve, reject) => {
-        console.log(`\nЗапуск: ${description}`);
+        log(`Запуск: ${description}`);
         exec(command, (error, stdout, stderr) => {
             if (error) {
-                console.error(
-                    `Ошибка при выполнении команды: ${command}`,
-                    error
-                );
-                reject(error);
+                log(err);
+                resolve(false);
             } else {
-                console.log(`${res} ${stdout}`);
+                log(`${res} ${stdout}`);
                 if (stderr) console.error(`Предупреждение: ${stderr}`);
-                resolve();
+                resolve(true);
             }
         });
     });
