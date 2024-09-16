@@ -4,9 +4,9 @@ export function runPython(command) {
     return new Promise((resolve, reject) => {
         exec(`python ${command}`, (error, stdout, stderr) => {
             if (error) {
-                resolve(error);
+                reject(error); // если есть ошибка, вызываем reject
             } else {
-                resolve(stdout);
+                resolve(stdout); // в случае успеха возвращаем результат
             }
         });
     });

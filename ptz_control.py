@@ -7,16 +7,18 @@
 import sys
 from onvif import ONVIFCamera
 from time import sleep
-
+import io
+args = sys.argv
 IP = "192.168.1.68"  # Camera IP address
 PORT = 80  # Port
 USER = "admin"  # Username
 PASS = "aa123456"  # Password
-
+# Задание кодировки UTF-8 для вывода
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 class ptzControl(object):
-    def __init__(self):
+    def __init__(self, ip):
         super(ptzControl, self).__init__()
-        self.mycam = ONVIFCamera(IP,PORT,USER,PASS)
+        self.mycam = ONVIFCamera(ip,PORT,USER,PASS)
         # create media service object
         self.media = self.mycam.create_media_service()
         # Get target profile
@@ -86,16 +88,19 @@ class ptzControl(object):
         ret = self.ptz.ContinuousMove(requestc)
 
     def move_tilt(self, velocity):
+        self.requestc.Velocity.Zoom.x = 0.0
         self.requestc.Velocity.PanTilt.x = 0.0
         self.requestc.Velocity.PanTilt.y = velocity
         self.perform_move(self.requestc)
 
     def move_pan(self, velocity):
+        self.requestc.Velocity.Zoom.x = 0.0
         self.requestc.Velocity.PanTilt.x = velocity
         self.requestc.Velocity.PanTilt.y = 0.0
         self.perform_move(self.requestc)
 
     def move_continuous(self, pan, tilt):
+        self.requestc.Velocity.Zoom.x = 0
         self.requestc.Velocity.PanTilt.x = pan
         self.requestc.Velocity.PanTilt.y = tilt
         self.perform_move(self.requestc)
@@ -114,14 +119,22 @@ class ptzControl(object):
         ret = self.ptz.AbsoluteMove(self.requesta)
 
     # Relative move functions --NO ERRORS BUT CAMERA DOES NOT MOVE
-    def move_relative(self, pan, tilt, velocity):
-        self.requestr.Translation.PanTilt.x = pan
-        self.requestr.Translation.PanTilt.y = tilt
-        self.requestr.Speed.PanTilt = [velocity,velocity]
-        # self.requestr.Speed.PanTilt.x = velocity
-        # self.requestr.Speed.PanTilt.y = velocity
-        self.requestr.Speed.Zoom = 0
+    def move_relative(self, pan_delta, tilt_delta, velocity):
+        # Получаем текущие координаты камеры
+        current_status = self.ptz.GetStatus({'ProfileToken': self.media_profile.token})
+
+        # Устанавливаем смещение и скорость для перемещения
+        self.requestr.Translation.PanTilt.x = pan_delta
+        self.requestr.Translation.PanTilt.y = tilt_delta
+        self.requestr.Translation.Zoom.x = 0
+
+        self.requestr.Speed.PanTilt.x = velocity
+        self.requestr.Speed.PanTilt.y = velocity
+        self.requestr.Speed.Zoom.x = 0
+
+        # Выполняем относительное перемещение
         ret = self.ptz.RelativeMove(self.requestr)
+        return ret
 
     def zoom_relative(self, zoom, velocity):
         self.requestr.Translation.PanTilt.x = 0
@@ -173,13 +186,28 @@ class ptzControl(object):
         return pan_tilt.x, pan_tilt.y
 
 if __name__ == '__main__':
-    # Create an instance of ptzControl
-    camera_control = ptzControl()
+    ip = sys.argv[1]
+    command = sys.argv[2]
+    camera_control = ptzControl(ip)
 
+    if command == 'move_to_origin':
+        out = sys.argv[3] == 'true'
+        print(f"Перемещение камеры в исходное положение. Внешнее: {out}")
+        # Вызов функции перемещения камеры на исходную позицию
+        camera_control.move_to_origin(out)
+
+    elif command == 'move_to_direction':
+        pan = float(sys.argv[3])
+        tilt = float(sys.argv[4])
+        print(f"Перемещение камеры в панель: {pan}, наклон: {tilt}")
+        # Вызов функции для перемещения камеры
+        camera_control.move_relative(pan, tilt, 3)
+
+    # Create an instance of ptzControl
     # Move the camera to (0, 0, 0) using AbsoluteMove
     # camera_control.move_to_origin()
 
     # camera_control.move_to_direction(25 / 100, 0)
-    camera_control.move_to_origin(False)
+    # camera_control.move_to_origin(False)
     # camera_control.move_to_origin()
 
