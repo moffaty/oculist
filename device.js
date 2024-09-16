@@ -44,7 +44,6 @@ class Device {
 
             // Проверяем, доступен ли нужный порт
             if (availablePorts.includes(this.config.path)) {
-                console.log(this.config.path);
                 this.device = new SerialPort(this.config);
                 this.device.on('open', () => this.#onOpen());
                 this.device.on('error', (err) => this.#onError(err));
@@ -52,19 +51,18 @@ class Device {
                 this.openPort(); // Попытка открыть порт
             } else {
                 this.log(
-                    `Дальномер ${this.name} не доступен (${this.config.path}).`
+                    `Устройство ${this.name} не доступен (${this.config.path}).`
                 );
                 this.#attemptReconnect(); // Попытка переподключения через некоторое время
             }
         } catch (err) {
-            console.log(err);
             this.log('Ошибка в отображении списка устройств: ', err.message);
             this.#attemptReconnect(); // Попытка переподключения через некоторое время
         }
     }
 
     #onOpen() {
-        this.log('Порт успешно открыт');
+        this.log(`Порт успешно открыт (${this.config.path})`);
         this.listenForResponse();
     }
 
@@ -159,7 +157,6 @@ export class GPS extends Device {
 
                     // Обрабатываем сообщение
                     if (message.startsWith('$')) {
-                        this.log(message);
                         this.parseNMEASentence(message);
                     }
                 } else {
@@ -240,10 +237,10 @@ export class RFinder extends Device {
     }
 }
 
-const gps = new GPS(rfinderConfig.GPS);
-setInterval(() => {
-    console.log(gps.speed, gps.latitude, gps.longitude);
-}, 4000);
+// const gps = new GPS(rfinderConfig.GPS);
+// setInterval(() => {
+//     console.log(gps.speed, gps.latitude, gps.longitude);
+// }, 4000);
 // const rf = new RFinder(rfinderConfig.rfinders[0]);
 // to work with rfinder need start with openport:
 // const rf = new rfinder(configFile);

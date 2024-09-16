@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { runCommand } from './commands.js';
-import { RFinder } from './rfinder.js';
+import { RFinder, GPS } from './device.js';
 import { logger } from './server/config.js';
 
 logger.custom('DEVICES.CSV', 'devices');
@@ -17,6 +17,7 @@ function getFormattedDate() {
 
 let cameraWork = true;
 let rfindersWork = true;
+let gpsWork = true;
 
 async function checkCamera(data) {
     // Шаг 1: Проверка пинга до устройства
@@ -47,6 +48,19 @@ async function checkRfinder(data) {
     });
 }
 
+async function checkGPS(data) {
+    const gps = new GPS(data);
+    await new Promise((resolve) => {
+        setTimeout(() => {
+            if (gps.device === null) {
+                gpsWork = false;
+            }
+            gps.stop();
+            resolve();
+        }, 1000); // Подождите 1 секунду, чтобы дать время устройству на инициализацию
+    });
+}
+
 async function resultTest() {
     // Дожидаемся завершения проверки камер
     await Promise.all(config.cameras.map((camera) => checkCamera(camera)));
@@ -54,7 +68,10 @@ async function resultTest() {
     // Дожидаемся завершения проверки дальномеров
     await Promise.all(config.rfinders.map((rfinder) => checkRfinder(rfinder)));
 
-    if (rfindersWork && cameraWork) {
+    // Дожидаемся завершения проверки GPS
+    await checkGPS(config.GPS);
+
+    if (rfindersWork && cameraWork && gpdWork) {
         logger.devices('Устройства подключены! Можно начинать работу');
     } else {
         logger.devices(
