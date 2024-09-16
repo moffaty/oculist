@@ -78,7 +78,6 @@ class ptzControl(object):
     def stop(self):
         self.requests.PanTilt = True
         self.requests.Zoom = True
-        print(f"self.request:{self.requests}")
         self.ptz.Stop(self.requests)
 
     # Continuous move functions
@@ -147,8 +146,12 @@ class ptzControl(object):
         self.requestg.PresetToken = '1'
         self.ptz.GotoPreset(self.requestg)
 
-    def move_to_origin(self):
-        self.requesta.Position.PanTilt.x = 0.0
+    def move_to_origin(self, out=True):
+        # out mean inner ship or out of ship
+        if (out):
+            self.requesta.Position.PanTilt.x = 0.0
+        else:
+            self.requesta.Position.PanTilt.x = 1.0
         self.requesta.Position.PanTilt.y = 1.0
         self.requesta.Position.Zoom.x = 0.0
         self.requesta.Speed.PanTilt.x = 1.0  # Set speed (adjust as needed)
@@ -176,8 +179,7 @@ if __name__ == '__main__':
     # Move the camera to (0, 0, 0) using AbsoluteMove
     # camera_control.move_to_origin()
 
-    # camera_control.move_to_direction(-25.0 / 100, 0)
-    camera_control.move_to_origin()
-
-    print(camera_control.get_current_orientation())
+    # camera_control.move_to_direction(25 / 100, 0)
+    camera_control.move_to_origin(False)
+    # camera_control.move_to_origin()
 

@@ -3,6 +3,8 @@ import math
 from onvif import ONVIFCamera
 from ptz_control import ptzControl  # Используем твою библиотеку управления PTZ
 
+camera_control = ptzControl()
+
 # Подключение к PTZ камере и получение статуса
 def get_ptz_status():
     mycam = ONVIFCamera('192.168.1.68', 80, 'admin', 'aa123456')
@@ -32,7 +34,7 @@ def get_sensor_size(width, height):
     elif width == 1280 and height == 960:  # Square
         return 4.84, 3.63
     else:
-        return 4.84, 3.63  # По умолчанию
+        return 4.64, 3.33  # По умолчанию
 
 # Вычисление панорамирования и наклона
 def calculate_pan_tilt(x_point, y_point, width, height, focal_length, sensor_width, sensor_height):
@@ -71,7 +73,7 @@ def image_on_mouse_click(event, x, y, flags, param):
         
         # Используем твою библиотеку для перемещения камеры
         camera_control = ptzControl()
-        camera_control.move_to_direction(35/ 100, 10 / 100)
+        camera_control.move_to_direction(pan, tilt)
 
 # Функция для обработки клика мыши на видеопотоке
 def video_on_mouse_click(event, x, y, flags, param):
@@ -102,9 +104,9 @@ def video_on_mouse_click(event, x, y, flags, param):
         
         print(f"Панорамирование: {pan}, Наклон: {tilt}, Фокусное расстояние: {focal_length}")
         
-        camera_control = ptzControl()
         # Отправляем команду PTZ на перемещение камеры
-        camera_control.move_to_direction(pan, tilt)
+        print(camera_control.get_current_orientation())
+        # camera_control.move_relative(pan, tilt, 1)
 
 # Функция для получения изображения с камеры
 def process_image():

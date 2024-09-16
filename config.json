@@ -24,25 +24,30 @@
     "rfinders": [
         {
             "name": "1001",
-            "port": "COM3",
-            "options": {
-                "baudRate": 115200,
-                "dataBits": 8,
-                "stopBits": 1,
-                "parity": "none",
-                "autoOpen": false
-            }
+            "path": "COM3",
+            "baudRate": 115200,
+            "dataBits": 8,
+            "stopBits": 1,
+            "parity": "none",
+            "autoOpen": false
         },
         {
             "name": "1002",
-            "port": "COM4",
-            "options": {
-                "baudRate": 115200,
-                "dataBits": 8,
-                "stopBits": 1,
-                "parity": "none",
-                "autoOpen": false
-            }
+            "path": "COM4",
+            "baudRate": 115200,
+            "dataBits": 8,
+            "stopBits": 1,
+            "parity": "none",
+            "autoOpen": false
         }
-    ]
+    ],
+    "GPS": {
+        "name": "farwater",
+        "path": "COM1",
+        "baudRate": 4800,
+        "dataBits": 8,
+        "stopBits": 1,
+        "parity": "none",
+        "autoOpen": false
+    }
 }
