@@ -8,7 +8,7 @@ import sys
 from onvif import ONVIFCamera
 from time import sleep
 
-IP = "192.168.1.69"  # Camera IP address
+IP = "192.168.1.68"  # Camera IP address
 PORT = 80  # Port
 USER = "admin"  # Username
 PASS = "aa123456"  # Password

@@ -4,13 +4,21 @@
             "name": "1001",
             "address": "192.168.1.68",
             "login": "admin",
-            "password": "aa123456"
+            "password": "aa123456",
+            "format": {
+                "fullhd": [5.27, 2.96],
+                "square": [4.84, 3.63]
+            }
         },
         {
             "name": "1002",
             "address": "192.168.1.69",
             "login": "admin",
-            "password": "aa123456"
+            "password": "aa123456",
+            "format": {
+                "fullhd": [5.27, 2.96],
+                "square": [4.84, 3.63]
+            }
         }
     ],
     "rfinders": [

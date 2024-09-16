@@ -2,7 +2,6 @@ import fs from 'fs';
 import { runCommand } from './commands.js';
 import { RFinder } from './rfinder.js';
 import { logger } from './server/config.js';
-import cam from 'onvif/lib/cam.js';
 
 logger.custom('DEVICES.CSV', 'devices');
 const config = JSON.parse(fs.readFileSync('config.json', 'utf-8'));

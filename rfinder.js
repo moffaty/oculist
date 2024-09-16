@@ -149,4 +149,3 @@ export class RFinder {
 // to work with rfinder need start with openport:
 // const rf = new rfinder(configFile);
 // rf.openPort(); // open serial port for commands and listening
-//
