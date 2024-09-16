@@ -19,6 +19,12 @@ let cameraWork = true;
 let rfindersWork = true;
 let gpsWork = true;
 
+export let camera1 = null;
+export let camera2 = null;
+export let rfinder1 = null;
+export let rfinder2 = null;
+export let gps = null;
+
 async function checkCamera(data) {
     // Шаг 1: Проверка пинга до устройства
     const res = await runCommand(
@@ -73,13 +79,15 @@ async function resultTest() {
 
     if (rfindersWork && cameraWork && gpdWork) {
         logger.devices('Устройства подключены! Можно начинать работу');
+        return true;
     } else {
         logger.devices(
             `Одно или несколько устройств подключены не правильно. Проверьте логи - ./logs/${getFormattedDate()}/devices`
         );
+        return false;
     }
 }
 
-await resultTest();
+const result = await resultTest();
 
 logger.stop();
