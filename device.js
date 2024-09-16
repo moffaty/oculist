@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { logger } from './server/config.js';
 import { SerialPort } from 'serialport';
+import { runPython } from './commands.js';
 const rfinderConfig = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
 
 class Device {
@@ -234,6 +235,23 @@ export class RFinder extends Device {
 
     sendSpeedMeasurement() {
         this.sendCommand('<MAspeed>');
+    }
+}
+
+export class Camera {
+    constructor(config) {
+        this.pan = 0;
+        this.tilt = 0;
+        this.zoom = 0;
+        this.script = `ptz_control.py`;
+    }
+
+    home() {
+        console.log(runPython(`${this.script} home`));
+    }
+
+    inner() {
+        console.log(runPython(`${this.script} inner`));
     }
 }
 

@@ -1,5 +1,17 @@
 import { exec, spawn } from 'child_process';
 
+export function runPython(command) {
+    return new Promise((resolve, reject) => {
+        exec(`python ${command}`, (error, stdout, stderr) => {
+            if (error) {
+                resolve(error);
+            } else {
+                resolve(stdout);
+            }
+        });
+    });
+}
+
 // Функция для выполнения shell-команд
 export function runCommand(
     command,
