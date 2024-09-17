@@ -1,7 +1,7 @@
 // Инициализация карты
-const map = L.map('map').setView([60.16952, 24.93545], 6); // Центр карты на Хельсинки
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+const map = L.map('map').setView([60.16952, 24.93545], 11);
+const mapUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+L.tileLayer(mapUrl).addTo(map);
 
 // Добавляем обработчик ПКМ (contextmenu)
 map.on('contextmenu', function (e) {
@@ -166,6 +166,40 @@ function updateShipPosition(position) {
 
     // map.setView([latitude, longitude]);
 }
+
+async function sendCameraRequest(camera, pan, tilt) {
+    const response = await fetch(`/camera/${camera}/${pan}/${tilt}`);
+    const data = await response.json();
+    console.log(data);
+}
+
+async function stopCamera(camera) {
+    const response = await fetch(`/camera/${camera}/stop`);
+    const data = await response.json();
+    console.log(data);
+}
+
+const camera1 = document.querySelector('#camera-form1');
+camera1.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pan = document.getElementById('pan1').value;
+    const tilt = document.getElementById('tilt1').value;
+
+    await sendCameraRequest(1, pan, tilt);
+});
+
+const camera2 = document.querySelector('#camera-form');
+camera2.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pan = document.getElementById('pan').value;
+    const tilt = document.getElementById('tilt').value;
+    await sendCameraRequest(2, pan, tilt);
+});
+
+document.querySelector('#stop1').addEventListener('click', async (e) => {
+    e.preventDefault();
+    await stopCamera(1);
+});
 
 // Обработчик отправки формы
 document

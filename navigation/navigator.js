@@ -9,9 +9,10 @@ function parseStr(input) {
 }
 
 export class Navigator {
-    constructor(name) {
+    constructor(name, startPoint = new Point(1, 1, 1)) {
         this.rideName = name;
         this.points = [];
+        this.cameras = [];
         this.speed = 0; // нужно из GPS определить
         this.course = 0; // нужно из GPS определить
         this.fullTime = 0;
@@ -19,7 +20,7 @@ export class Navigator {
             this.fullTime += 1;
         }, 1000);
         this.id = null;
-        this.startPoint = new Point(1, 1, 1);
+        this.startPoint = startPoint;
         this.createRide(name, this.startPoint);
     }
 

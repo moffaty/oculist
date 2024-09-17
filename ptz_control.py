@@ -201,7 +201,10 @@ if __name__ == '__main__':
         tilt = float(sys.argv[4])
         print(f"Перемещение камеры в панель: {pan}, наклон: {tilt}")
         # Вызов функции для перемещения камеры
-        camera_control.move_relative(pan, tilt, 3)
+        camera_control.move_to_direction(pan, tilt)
+
+    elif command == 'stop':
+        camera_control.stop()
 
     # Create an instance of ptzControl
     # Move the camera to (0, 0, 0) using AbsoluteMove

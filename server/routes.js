@@ -1,9 +1,9 @@
 import { join } from 'path';
 import { Bearing } from '../db.js';
-import { Navigator } from '../navigation/navigator.js';
+import { gps, camera1, camera2 } from './devices.js';
+import { moveCamera } from './socket.js';
 
-let navigator;
-
+export let start = false;
 // Маршруты
 export function setupRoutes(app) {
     // Отправка главной страницы
@@ -86,21 +86,43 @@ export function setupRoutes(app) {
         }
     });
 
-    app.get('/ride/start', async (req, res) => {
+    // app.get('/ride/start', async (req, res) => {
+    //     try {
+    //         navigator = new Navigator('test');
+    //         start = true;
+    //         res.json({ res: true, msg: 'Следование начато' });
+    //     } catch (error) {
+    //         res.json({ res: false, msg: 'Не удалось начать следование' });
+    //     }
+    // });
+
+    // app.get('/ride/end', async (req, res) => {
+    //     try {
+    //         await navigator.endRide();
+    //         start = false;
+    //         res.json({ res: true, msg: 'Следование закончено' });
+    //     } catch (error) {
+    //         res.json({ res: false, msg: 'Не удалось закончить следование' });
+    //     }
+    // });
+
+    app.get('/camera/:id/:pan/:tilt', async (req, res) => {
         try {
-            navigator = new Navigator('test');
-            res.json({ res: true, msg: 'Следование начато' });
+            const { id, pan, tilt } = req.params;
+            moveCamera(id, pan, tilt);
+            res.json({ res: true });
         } catch (error) {
-            res.json({ res: false, msg: 'Не удалось начать следование' });
+            res.json({ res: false, msg: 'Не удалось повернуть камеры' });
         }
     });
 
-    app.get('/ride/end', async (req, res) => {
+    app.get('/camera/:id/stop', async (req, res) => {
         try {
-            await navigator.endRide();
-            res.json({ res: true, msg: 'Следование закончено' });
+            const { id } = req.params;
+            stopCamera(id);
+            res.json({ res: true });
         } catch (error) {
-            res.json({ res: false, msg: 'Не удалось закончить следование' });
+            res.json({ res: false, msg: 'Не удалось остановить камеру' });
         }
     });
 }

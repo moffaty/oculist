@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { logger } from './server/config.js';
+import { exec } from 'child_process';
 import { SerialPort } from 'serialport';
 const rfinderConfig = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
 
@@ -135,10 +136,10 @@ class Device {
 export class GPS extends Device {
     constructor(config) {
         super(config);
-        this.latitude = null;
-        this.longitude = null;
-        this.course = null;
-        this.speed = null;
+        this.latitude = 0;
+        this.longitude = 0;
+        this.course = 0;
+        this.speed = 0;
     }
 
     listenForResponse() {
@@ -237,15 +238,18 @@ export class RFinder extends Device {
     }
 }
 
-import { exec } from 'child_process';
-
-class PtzControlInterface {
+export class PtzControlInterface {
     constructor(ip) {
         this.ip = ip;
         this.x = 0.0;
         this.y = 0.0;
         this.z = 0.0;
         this.scriptPath = './ptz_control.py'; // путь к Python-скрипту
+        fs.watchFile('./camera.json', { interval: 1000 }, (curr, prev) => {
+            const data = JSON.parse(fs.readFileSync('./camera.json', 'utf-8'));
+            this.x += data.pan;
+            this.y += data.tilt;
+        });
     }
 
     // Функция для вызова Python-скрипта с передачей параметров
@@ -263,6 +267,10 @@ class PtzControlInterface {
                 resolve(stdout);
             });
         });
+    }
+
+    stop() {
+        return this.runCommand('stop');
     }
 
     // Инициализация камеры
@@ -315,11 +323,11 @@ class PtzControlInterface {
 }
 
 // Пример использования интерфейса
-const ptzInterface = new PtzControlInterface('192.168.1.69');
+// export const camera1 = new PtzControlInterface('192.168.1.68');
+// export const camera2 = new PtzControlInterface('192.168.1.69');
 
 // Инициализация камеры
 
-await ptzInterface.moveToDirection(1 / 100, 1);
 // Создаем объект камеры и вызываем init
 // const gps = new GPS(rfinderConfig.GPS);
 // setInterval(() => {
