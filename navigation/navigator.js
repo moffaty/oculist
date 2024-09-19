@@ -1,8 +1,28 @@
 // OptiVessel
 import LatLon, { Dms } from 'geodesy/latlon-spherical.js';
-import { Ride } from '../db.js';
+import { Ride, Bearing } from '../db.js';
 
 const Radius = 6371;
+
+function formatCoordinates(value, isLatitude) {
+    // Определяем, положительное число или отрицательное (для N/S или E/W)
+    const direction =
+        value >= 0 ? (isLatitude ? 'N' : 'E') : isLatitude ? 'S' : 'W';
+
+    // Берем абсолютное значение, чтобы избежать минуса в вычислениях
+    const absValue = Math.abs(value);
+
+    // Разделяем на целую и дробную части
+    const [integerPart, decimalPart] = absValue.toString().split('.');
+
+    // Берем два символа из дробной части, чтобы сформировать требуемые значения
+    const decimalStr = (decimalPart || '00').substring(0, 4).padEnd(4, '0');
+
+    // Формируем итоговую строку
+    const formatted = `${integerPart} ${decimalStr.substring(0, 2)} ${decimalStr.substring(2, 4)} ${direction}`;
+
+    return formatted;
+}
 
 function parseStr(input) {
     return input.replace(/[0-9.]/g, '').trim(); // Удаляет все цифры и точки
@@ -22,6 +42,20 @@ export class Navigator {
         this.id = null;
         this.startPoint = startPoint;
         this.createRide(name, this.startPoint);
+        this.connectPoints(this.points);
+    }
+
+    async connectPoints(pointsArray) {
+        try {
+            const points = await Bearing.findAll();
+            points.forEach((point) => {
+                const p = new Point(point.latitude, point.longitude);
+                p.id = point.id;
+                pointsArray.push(p);
+            });
+        } catch (error) {
+            console.error('Ошибка при получении точек:', error);
+        }
     }
 
     async createRide(name, startPoint) {
@@ -39,7 +73,15 @@ export class Navigator {
     }
 
     addPoint(point) {
-        this.points.push(point);
+        if (point instanceof Point) {
+            this.points.push(point);
+        } else {
+            this.points.push(new Point(point.lat, point.lon, point.bearing));
+        }
+    }
+
+    delPoint(id) {
+        this.points = this.points.filter((point) => point.id !== id);
     }
 
     endRide() {
@@ -66,7 +108,7 @@ export class Navigator {
 }
 
 export class Point {
-    constructor(lat, lon, bearing) {
+    constructor(lat, lon, bearing = 0) {
         this._lat = Dms.parse(lat);
         this._lon = Dms.parse(lon);
         this._bearing = Dms.parse(bearing);
@@ -177,6 +219,10 @@ export class Point {
      * @param {Point} p2
      * @returns Местонахождение или false если нет пересечений
      */
+    // {
+    //     "latitude": 59.88997030507318,
+    //     "longitude": 29.919204711914066
+    // }
     static findIntersection(p1, p2) {
         const point1 = new LatLon(p1.lat, p1.lon);
         const point2 = new LatLon(p2.lat, p2.lon);

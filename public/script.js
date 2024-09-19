@@ -1,5 +1,5 @@
 // Инициализация карты
-const map = L.map('map').setView([60.16952, 24.93545], 11);
+const map = L.map('map').setView([60, 30], 11);
 const mapUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 L.tileLayer(mapUrl).addTo(map);
 
@@ -150,6 +150,16 @@ async function addBearing(marker, bearingData) {
     }
 }
 
+async function position() {
+    const response = await fetch('/position');
+    const data = await response.json();
+    if (data.res) {
+        return data.message;
+    } else {
+        console.error(data.message);
+    }
+}
+
 // Функция для обновления позиции корабля на карте
 function updateShipPosition(position) {
     const { latitude, longitude } = position;
@@ -161,10 +171,8 @@ function updateShipPosition(position) {
     // Обновляем маркер позиции корабля
     shipMarker = L.marker([latitude, longitude], { color: 'red' })
         .addTo(map)
-        .bindPopup('Текущее местоположение корабля')
+        .bindPopup('Текущее местоположение')
         .openPopup();
-
-    // map.setView([latitude, longitude]);
 }
 
 async function sendCameraRequest(camera, pan, tilt) {
@@ -200,6 +208,14 @@ document.querySelector('#stop1').addEventListener('click', async (e) => {
     e.preventDefault();
     await stopCamera(1);
 });
+
+document
+    .querySelector('.locate-button')
+    .addEventListener('click', async (e) => {
+        e.preventDefault();
+        const pos = await position();
+        updateShipPosition(pos);
+    });
 
 // Обработчик отправки формы
 document

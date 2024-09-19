@@ -6,7 +6,7 @@ import { Navigator } from '../navigation/navigator.js';
 // Создаем WebSocket сервер на порту 9999
 const wsServer = new WebSocketServer({ port: 9999 });
 
-const navigation = new Navigator('test');
+export const navigation = new Navigator('test');
 navigation.cameras = [camera1, camera2];
 export function setupWebSocket() {
     logger.custom('ws.csv', 'ws');

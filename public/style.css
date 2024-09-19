@@ -36,15 +36,22 @@ body {
     padding: 10px 20px;
 }
 
+.locate-button {
+    top: 7%;
+    left: 5%; /* Выставляем кнопки слева */
+    font-size: 18px;
+    padding: 10px 20px;
+}
+
 .camera1-button {
-    top: 19%;
+    top: 13%;
     left: 5%; /* Выставляем кнопки слева */
     font-size: 18px;
     padding: 10px 20px;
 }
 
 .camera2-button {
-    top: 25%;
+    top: 19%;
     left: 5%; /* Выставляем кнопки слева */
     font-size: 18px;
     padding: 10px 20px;

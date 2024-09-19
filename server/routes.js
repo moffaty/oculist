@@ -1,7 +1,7 @@
 import { join } from 'path';
 import { Bearing } from '../db.js';
 import { gps, camera1, camera2 } from './devices.js';
-import { moveCamera } from './socket.js';
+import { moveCamera, navigation } from './socket.js';
 
 export let start = false;
 // Маршруты
@@ -39,6 +39,7 @@ export function setupRoutes(app) {
                 latitude,
                 longitude,
             });
+            navigation.addPoint({ latitude, longitude, bearing: 0 });
 
             res.json({ message: 'Пеленг добавлен', bearing: newBearing });
         } catch (error) {
@@ -56,6 +57,8 @@ export function setupRoutes(app) {
                 },
             });
 
+            navigation.delPoint(id);
+
             if (result === 1) {
                 res.json(`Запись с ID ${id} успешно удалена.`);
             } else {
@@ -69,8 +72,22 @@ export function setupRoutes(app) {
     // Получить текущую позицию корабля
     app.get('/position', (req, res) => {
         try {
-            // const position = ship.calculatePosition();
-            res.json(0);
+            // navigation.points[0].bearing = navigation.course + navigation.cameras[0].getCurrentOrientation().x * 100;
+            navigation.points[0].bearing = 140;
+            // для получения градусного значения разворота необходимо домножить число на сто,
+            // так как в PTZ исчесление идёт таким образом: 1 это 90, -1 это -90 градусов, а 0.5 это +-45 граудосв
+            // navigation.points[1].bearing = navigation.course + navigation.cameras[1].getCurrentOrientation().x * 100;
+            navigation.points[1].bearing = 200;
+            console.log(navigation.points);
+            const position = navigation.getPosition(
+                navigation.points[0],
+                navigation.points[1]
+            );
+            console.log(position);
+            res.json({
+                res: true,
+                message: { latitude: position._lat, longitude: position._lon },
+            });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
