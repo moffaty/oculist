@@ -4,26 +4,6 @@ import { Ride, Bearing } from '../db.js';
 
 const Radius = 6371;
 
-function formatCoordinates(value, isLatitude) {
-    // Определяем, положительное число или отрицательное (для N/S или E/W)
-    const direction =
-        value >= 0 ? (isLatitude ? 'N' : 'E') : isLatitude ? 'S' : 'W';
-
-    // Берем абсолютное значение, чтобы избежать минуса в вычислениях
-    const absValue = Math.abs(value);
-
-    // Разделяем на целую и дробную части
-    const [integerPart, decimalPart] = absValue.toString().split('.');
-
-    // Берем два символа из дробной части, чтобы сформировать требуемые значения
-    const decimalStr = (decimalPart || '00').substring(0, 4).padEnd(4, '0');
-
-    // Формируем итоговую строку
-    const formatted = `${integerPart} ${decimalStr.substring(0, 2)} ${decimalStr.substring(2, 4)} ${direction}`;
-
-    return formatted;
-}
-
 function parseStr(input) {
     return input.replace(/[0-9.]/g, '').trim(); // Удаляет все цифры и точки
 }
@@ -36,6 +16,7 @@ export class Navigator {
         this.speed = 0; // нужно из GPS определить
         this.course = 0; // нужно из GPS определить
         this.fullTime = 0;
+        this.position = new Point(0, 0, 0);
         setInterval(() => {
             this.fullTime += 1;
         }, 1000);
@@ -44,6 +25,17 @@ export class Navigator {
         this.createRide(name, this.startPoint);
         this.connectPoints(this.points);
     }
+
+    move() {
+        const newPosition = this.position.move(this.speed, this.course);
+        const point = new LatLon(newPosition._lat, newPosition._lon);
+        this.points.forEach((p) => {
+            p.bearing = point.initialBearingTo(new LatLon(p._lat, p._lon));
+        });
+        return newPosition;
+    }
+
+    stop() {}
 
     async connectPoints(pointsArray) {
         try {
@@ -100,10 +92,12 @@ export class Navigator {
      */
     getPosition(p1, p2 = NaN, distance = NaN) {
         if (p1 && p2) {
-            return Point.findIntersection(p1, p2);
+            this.position = Point.findIntersection(p1, p2);
         } else if (p1 && distance) {
-            return p1.calculateDirection(distance);
+            this.position = p1.calculateDirection(distance);
         }
+        this.position.bearing = this.course;
+        return this.position;
     }
 }
 
@@ -158,27 +152,27 @@ export class Point {
             case 'knots':
                 return speed * 1.852; // 1 узел = 1.852 км/ч
             default:
-                throw new Error('Неизвестная единица измерения скорости');
+                return speed;
         }
     }
 
     // Функция перемещения на основе скорости и азимута
-    move(speed) {
+    move(speed, bearing = this.bearing) {
         const speedValue = parseFloat(speed); // Извлекаем число
-        const speedType = parseStr(speed); // Извлекаем единицу измерения
+        const speedType = parseStr(String(speed)); // Извлекаем единицу измерения
 
         // Конвертируем скорость в километры в час
-        const speedInKmh = convertToKmh(speedValue, speedType);
+        const speedInKmh = this.#convertToKmh(speedValue, speedType);
 
         // Логика перемещения с учетом скорости в км/ч
         const distance =
             (speedInKmh * (Number(Date.now()) - this.time)) / 3600000; // Преобразуем время в часы
-        console.log('Пройденное расстояние:', distance);
         const startPoint = new LatLon(this.lat, this.lon);
-        const newPoint = startPoint.destinationPoint(distance, this.bearing); // Расстояние в километрах
+        const newPoint = startPoint.destinationPoint(distance, bearing); // Расстояние в километрах
         this.lat = newPoint.lat;
         this.lon = newPoint.lon;
         this.updateTime();
+        return this;
     }
 
     // Рассчет новой точки на основе текущей позиции, азимута и расстояния
@@ -237,7 +231,8 @@ export class Point {
                 bearing2
             );
             if (!pInt) return false;
-            return pInt;
+            const newPoint = new Point(pInt._lat, pInt._lon);
+            return newPoint;
         } catch (error) {
             return false;
         }

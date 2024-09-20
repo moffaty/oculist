@@ -86,7 +86,7 @@ export function setupRoutes(app) {
             console.log(position);
             res.json({
                 res: true,
-                message: { latitude: position._lat, longitude: position._lon },
+                message: { _lat: position._lat, _lon: position._lon },
             });
         } catch (error) {
             res.status(500).json({ error: error.message });

@@ -22,6 +22,10 @@ body {
     padding: 10px 20px;
 }
 
+.rotating-icon {
+    transform-origin: center; /* Центр поворота */
+}
+
 .devices-button {
     top: 7%;
     left: 5%; /* Выставляем кнопки слева */

@@ -16,11 +16,12 @@ export function setupWebSocket() {
         logger.ws('Новое подключение');
         // Отправляем координаты каждые 1000 мс
         const intervalId = setInterval(() => {
-            navigation.speed = gps.speed;
-            navigation.course = gps.course;
+            navigation.speed = 11110;
+            navigation.course = 30;
             // Проверяем, что WebSocket всё ещё открыт перед отправкой сообщения
             if (ws.readyState === ws.OPEN) {
-                const location = { latitude: 59.99596, longitude: 30 };
+                const location = navigation.position;
+                navigation.move();
                 sendLocation(ws, location);
             } else {
                 // Очищаем интервал, если соединение закрыто

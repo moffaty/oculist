@@ -3,6 +3,15 @@ const map = L.map('map').setView([60, 30], 11);
 const mapUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 L.tileLayer(mapUrl).addTo(map);
 
+// Создаем кастомную иконку для корабля
+const shipIcon = L.icon({
+    iconUrl: 'ship.png', // Путь к вашему изображению корабля
+    iconSize: [32, 32], // Размер иконки [width, height]
+    iconAnchor: [16, 16], // Точка привязки иконки (центр иконки)
+    popupAnchor: [0, -16], // Точка, относительно которой будет отображаться всплывающее окно
+    className: 'rotating-icon', // Добавляем класс для возможности вращения
+});
+
 // Добавляем обработчик ПКМ (contextmenu)
 map.on('contextmenu', function (e) {
     // Координаты клика
@@ -54,7 +63,7 @@ socket.onopen = (e) => {
 
 socket.onmessage = (e) => {
     const position = JSON.parse(e.data);
-    // updateShipPosition(position);
+    updateShipPosition(position);
 };
 
 // Функция для загрузки пеленгов с сервера
@@ -162,14 +171,13 @@ async function position() {
 
 // Функция для обновления позиции корабля на карте
 function updateShipPosition(position) {
-    const { latitude, longitude } = position;
+    const { _lat, _lon } = position;
 
     if (shipMarker) {
         map.removeLayer(shipMarker);
     }
-
-    // Обновляем маркер позиции корабля
-    shipMarker = L.marker([latitude, longitude], { color: 'red' })
+    // Обновляем маркер позиции корабля с кастомной иконкой
+    shipMarker = L.marker([_lat, _lon], { icon: shipIcon })
         .addTo(map)
         .bindPopup('Текущее местоположение')
         .openPopup();
@@ -216,6 +224,8 @@ document
         const pos = await position();
         updateShipPosition(pos);
     });
+
+document.querySelector('.locate-button').click();
 
 // Обработчик отправки формы
 document
