@@ -73,7 +73,7 @@ export function setupRoutes(app) {
     app.get('/position', (req, res) => {
         try {
             // navigation.points[0].bearing = navigation.course + navigation.cameras[0].getCurrentOrientation().x * 100;
-            navigation.points[0].bearing = 140;
+            navigation.points[0].bearing = 160;
             // для получения градусного значения разворота необходимо домножить число на сто,
             // так как в PTZ исчесление идёт таким образом: 1 это 90, -1 это -90 градусов, а 0.5 это +-45 граудосв
             // navigation.points[1].bearing = navigation.course + navigation.cameras[1].getCurrentOrientation().x * 100;

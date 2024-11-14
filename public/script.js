@@ -63,7 +63,7 @@ socket.onopen = (e) => {
 
 socket.onmessage = (e) => {
     const position = JSON.parse(e.data);
-    updateShipPosition(position);
+    // updateShipPosition(position);
 };
 
 // Функция для загрузки пеленгов с сервера

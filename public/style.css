@@ -11,7 +11,6 @@ body {
 }
 
 .controls {
-    position: absolute;
     z-index: 1000; /* Убедимся, что кнопка всегда поверх карты */
 }
 
