@@ -8,7 +8,8 @@ export let start = false;
 export function setupRoutes(app) {
     // Отправка главной страницы
     app.get('/', (req, res) => {
-        res.sendFile(join('index.html'));
+        console.log(join('views'));
+        res.sendFile(join('./views/index.html'));
     });
 
     app.get('/get-bearing', async (req, res) => {
