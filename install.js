@@ -27,10 +27,6 @@ async function updateGitHooks() {
     );
 }
 
-function startServer() {
-    return runInBackground('node server', 'Запуск в режиме разработки');
-}
-
 // Функция для выполнения всех команд последовательно
 async function runAllCommands() {
     try {
@@ -42,8 +38,6 @@ async function runAllCommands() {
         await createDatabase();
 
         await updateGitHooks();
-
-        // startServer();
 
         console.log('\nВсе команды успешно выполнены!');
     } catch (error) {

@@ -1,5 +1,6 @@
 import fs from 'fs';
-import { GPS, RFinder, PtzControlInterface } from '../device.js';
+import { GPS } from '../devices/gps.js';
+import { PtzControlInterface } from '../devices/ptzControlInterface.js';
 
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf-8'));
 

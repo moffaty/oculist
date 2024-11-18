@@ -2,12 +2,15 @@
 import LatLon, { Dms } from 'geodesy/latlon-spherical.js';
 import { Ride, Bearing } from '../db.js';
 
-const Radius = 6371;
+class NavigatorUtils {
+    constructor() {
+        this.radius = 6371;
+    }
 
-function parseStr(input) {
-    return input.replace(/[0-9.]/g, '').trim(); // Удаляет все цифры и точки
+    parseStr(input) {
+        return input.replace(/[0-9.]/g, '').trim();
+    }
 }
-
 export class Navigator {
     constructor(name, startPoint = new Point(1, 1, 1)) {
         this.rideName = name;
@@ -107,6 +110,7 @@ export class Point {
         this._lon = Dms.parse(lon);
         this._bearing = Dms.parse(bearing);
         this.time = Number(Date.now());
+        this.navigatorUtils = new NavigatorUtils();
     }
 
     updateTime() {
@@ -159,7 +163,7 @@ export class Point {
     // Функция перемещения на основе скорости и азимута
     move(speed, bearing = this.bearing) {
         const speedValue = parseFloat(speed); // Извлекаем число
-        const speedType = parseStr(String(speed)); // Извлекаем единицу измерения
+        const speedType = this.navigatorUtils.parseStr(String(speed)); // Извлекаем единицу измерения
 
         // Конвертируем скорость в километры в час
         const speedInKmh = this.#convertToKmh(speedValue, speedType);
@@ -186,7 +190,7 @@ export class Point {
         const λ1 = this.toRadians(this.lon);
         const θ = this.toRadians(this.bearing);
 
-        const δ = distance / Radius;
+        const δ = distance / this.navigatorUtils.radius;
 
         const φ2 = Math.asin(
             Math.sin(φ1) * Math.cos(δ) +
@@ -213,10 +217,6 @@ export class Point {
      * @param {Point} p2
      * @returns Местонахождение или false если нет пересечений
      */
-    // {
-    //     "latitude": 59.88997030507318,
-    //     "longitude": 29.919204711914066
-    // }
     static findIntersection(p1, p2) {
         const point1 = new LatLon(p1.lat, p1.lon);
         const point2 = new LatLon(p2.lat, p2.lon);

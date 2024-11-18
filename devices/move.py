@@ -4,11 +4,12 @@ import json
 from onvif import ONVIFCamera
 from ptz_control import ptzControl  # Используем твою библиотеку управления PTZ
 
-camera_control = ptzControl('192.168.1.68')
+camera_control = ptzControl("192.168.1.68")
+
 
 # Подключение к PTZ камере и получение статуса
 def get_ptz_status():
-    mycam = ONVIFCamera('192.168.1.68', 80, 'admin', 'aa123456')
+    mycam = ONVIFCamera("192.168.1.68", 80, "admin", "aa123456")
 
     # Получение PTZ сервиса
     ptz = mycam.create_ptz_service()
@@ -18,15 +19,17 @@ def get_ptz_status():
     profiles = media_service.GetProfiles()
 
     # Получение PTZ статуса
-    status = ptz.GetStatus({'ProfileToken': profiles[0].token})
+    status = ptz.GetStatus({"ProfileToken": profiles[0].token})
 
     return status, profiles[0], ptz
+
 
 # Получение разрешения потока
 def get_stream_resolution(profile):
     video_source = profile.VideoSourceConfiguration
     resolution = video_source.Bounds
     return resolution.width, resolution.height
+
 
 # Получение размеров сенсора в зависимости от разрешения
 def get_sensor_size(width, height):
@@ -37,8 +40,11 @@ def get_sensor_size(width, height):
     else:
         return 4.64, 3.33  # По умолчанию
 
+
 # Вычисление панорамирования и наклона
-def calculate_pan_tilt(x_point, y_point, width, height, focal_length, sensor_width, sensor_height):
+def calculate_pan_tilt(
+    x_point, y_point, width, height, focal_length, sensor_width, sensor_height
+):
     x_norm = (x_point - width / 2) / (width / 2)
     y_norm = (y_point - height / 2) / (height / 2)
 
@@ -53,13 +59,14 @@ def calculate_pan_tilt(x_point, y_point, width, height, focal_length, sensor_wid
 
     return pan, tilt
 
+
 # Функция для обработки клика мыши
 def image_on_mouse_click(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(f"Клик по точке: X={x}, Y={y}")
-        frame = param['frame']
+        frame = param["frame"]
         height, width, _ = frame.shape
-        
+
         status, profile, ptz = get_ptz_status()
         stream_width, stream_height = get_stream_resolution(profile)
         sensor_width, sensor_height = get_sensor_size(stream_width, stream_height)
@@ -67,24 +74,31 @@ def image_on_mouse_click(event, x, y, flags, param):
         zoom_position = status.Position.Zoom.x
         min_focal_length = 6
         max_focal_length = 260
-        focal_length = min_focal_length + zoom_position * (max_focal_length - min_focal_length)
+        focal_length = min_focal_length + zoom_position * (
+            max_focal_length - min_focal_length
+        )
 
-        pan, tilt = calculate_pan_tilt(x, y, width, height, focal_length, sensor_width, sensor_height)
-        print(f"Панорамирование: {pan}, Наклон: {tilt}, Фокусное расстояние: {focal_length}")
-        
+        pan, tilt = calculate_pan_tilt(
+            x, y, width, height, focal_length, sensor_width, sensor_height
+        )
+        print(
+            f"Панорамирование: {pan}, Наклон: {tilt}, Фокусное расстояние: {focal_length}"
+        )
+
         # Используем твою библиотеку для перемещения камеры
         camera_control = ptzControl()
         camera_control.move_to_direction(pan, tilt)
+
 
 # Функция для обработки клика мыши на видеопотоке
 def video_on_mouse_click(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
         print(f"Клик по точке: X={x}, Y={y}")
-        
+
         # Получаем размеры изображения (кадра)
-        frame = param['frame']
+        frame = param["frame"]
         height, width, _ = frame.shape
-        
+
         # Получаем текущее положение камеры и параметры сенсора
         status, profile, ptz = get_ptz_status()
 
@@ -95,44 +109,54 @@ def video_on_mouse_click(event, x, y, flags, param):
         sensor_width, sensor_height = get_sensor_size(stream_width, stream_height)
 
         # Динамически получаем текущее фокусное расстояние
-        zoom_position = status.Position.Zoom.x  # Значение от 0 (минимум) до 1 (максимум)
+        zoom_position = (
+            status.Position.Zoom.x
+        )  # Значение от 0 (минимум) до 1 (максимум)
         min_focal_length = 6  # Минимальное фокусное расстояние из спецификации
         max_focal_length = 260  # Максимальное фокусное расстояние из спецификации
-        focal_length = min_focal_length + zoom_position * (max_focal_length - min_focal_length)
+        focal_length = min_focal_length + zoom_position * (
+            max_focal_length - min_focal_length
+        )
 
         # Рассчитываем поворот камеры
-        pan, tilt = calculate_pan_tilt(x, y, width, height, focal_length, sensor_width, sensor_height)
-        
-        print(f"Панорамирование: {pan}, Наклон: {tilt}, Фокусное расстояние: {focal_length}")
-        with open('camera.json', 'w') as file:
-            json.dump({ "pan": pan, "tilt":tilt, "focal_length": focal_length }, file)
+        pan, tilt = calculate_pan_tilt(
+            x, y, width, height, focal_length, sensor_width, sensor_height
+        )
+
+        print(
+            f"Панорамирование: {pan}, Наклон: {tilt}, Фокусное расстояние: {focal_length}"
+        )
+        with open("camera.json", "w") as file:
+            json.dump({"pan": pan, "tilt": tilt, "focal_length": focal_length}, file)
         # Отправляем команду PTZ на перемещение камеры
         print(camera_control.get_current_orientation())
         # camera_control.move_relative(pan, tilt, 1)
 
+
 # Функция для получения изображения с камеры
 def process_image():
     # Загружаем изображение (можно заменить на поток с камеры)
-    image_path = 'test.jpg'
+    image_path = "test.jpg"
     frame = cv2.imread(image_path)
-    
+
     if frame is None:
         return
 
     cv2.namedWindow("Image")
-    cv2.setMouseCallback("Image", image_on_mouse_click, param={'frame': frame})
+    cv2.setMouseCallback("Image", image_on_mouse_click, param={"frame": frame})
 
     while True:
-        cv2.imshow('Image', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.imshow("Image", frame)
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     cv2.destroyAllWindows()
 
+
 # Функция для работы с видеопотоком камеры
 def process_video_stream():
     # Подключаемся к видеопотоку камеры
-    cap = cv2.VideoCapture('rtsp://192.168.1.68:554')  # URL RTSP потока
+    cap = cv2.VideoCapture("rtsp://192.168.1.68:554")  # URL RTSP потока
 
     if not cap.isOpened():
         print("Ошибка подключения к видеопотоку.")
@@ -149,22 +173,26 @@ def process_video_stream():
             break
 
         # Передаем текущий кадр в функцию обработки кликов
-        cv2.setMouseCallback("Camera Stream", video_on_mouse_click, param={'frame': frame})
+        cv2.setMouseCallback(
+            "Camera Stream", video_on_mouse_click, param={"frame": frame}
+        )
 
         # Отображаем видеопоток
-        cv2.imshow('Camera Stream', frame)
+        cv2.imshow("Camera Stream", frame)
 
         # Нажмите 'q' для выхода
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     cap.release()
     cv2.destroyAllWindows()
 
+
 # Основная программа
 def main():
     # process_image()
     process_video_stream()
+
 
 if __name__ == "__main__":
     main()
